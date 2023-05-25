@@ -1,14 +1,21 @@
-import pandas as pd
+# Importações
 import os
+import zipfile
+import pandas as pd
 import tabula
 
+# PDF que vamos tirar as tabelas
 PDF_PATH = "Anexo_I_Rol_2021.pdf"
 
-tables = tabula.read_pdf(PDF_PATH, pages='3-180')
+# Lendo as paginas do pdf escolhidas
+tabelas = tabula.read_pdf(PDF_PATH, pages='3-180')
 
-#for df in tables:df = df.drop(index=0)
-#tables[1] = tables[1].drop(index=0)
+# Usando o pandas para unir os dados das tabelas
+table_cat = pd.concat(tabelas, ignore_index=True)
 
-table_cat = pd.concat(tables, ignore_index=True)
+# Transformando em csv e guardando o arquivo na pasta output
+table_cat.to_csv(os.path.join("output","teste.csv"),index=False)
 
-table_cat.to_csv(os.path.join("output",f"31.csv"),index=False)
+# Zipando o arquivo
+with zipfile.ZipFile('Teste_Leticia_Calabria.zip', 'w', zipfile.ZIP_DEFLATED) as z:
+    z.write('output/teste.csv')
